@@ -204,3 +204,267 @@ This lesson introduced Generative AI and LLMs, covering:
 
 **Next Lesson:**  
 We will set up a Spring AI project, configure dependencies, create a Spring Boot project, and explore integration with different LLM providers.
+
+Here’s your content properly formatted in Markdown:
+
+# Spring AI Project Setup and Configuration
+
+This lesson is crucial for laying the groundwork for your Generative AI projects using Spring AI. We'll guide you through:
+
+- Setting up a new Spring Boot project
+- Adding the necessary Spring AI dependencies
+- Configuring your application to interact with Large Language Models (LLMs)
+
+A well-configured project ensures a smooth development experience and seamless integration of Spring AI's powerful features into your applications.
+
+---
+
+## Setting Up a New Spring Boot Project
+
+There are several ways to create a new Spring Boot project. We'll cover two common methods:
+
+- Using **Spring Initializr**
+- Using your **IDE**
+
+---
+
+### Using Spring Initializr
+
+**Spring Initializr** is a web-based tool that simplifies the process of creating a new Spring Boot project.
+
+#### Steps:
+
+1. **Access Spring Initializr:**  
+   Open your browser and go to [https://start.spring.io/](https://start.spring.io/)
+
+2. **Configure Project Metadata:**  
+   - **Project:** Maven (or Gradle)  
+   - **Language:** Java  
+   - **Spring Boot Version:** Latest stable (e.g., `3.2.x`)  
+   - **Group:** `com.example`  
+   - **Artifact:** `spring-ai-demo`  
+   - **Name:** `SpringAIDemo`  
+   - **Description:** `Demo project for Spring AI`  
+   - **Package Name:** `com.example.springai`  
+   - **Packaging:** `Jar` (for standalone) or `War` (for servlet container)  
+   - **Java Version:** `17` or later  
+
+3. **Add Dependencies:**  
+   - `Spring Web` — For building web apps and RESTful APIs  
+   - `Spring AI Starter` — Core Spring AI support  
+   - `Lombok` — Reduces boilerplate code  
+
+4. **Generate the Project:**  
+   Click **Generate** to download a ZIP file containing your project.
+
+5. **Extract the Project:**  
+   Extract the ZIP contents to a directory on your computer.
+
+---
+
+### Using Your IDE (IntelliJ IDEA Example)
+
+Most IDEs provide built-in support for creating Spring Boot projects.
+
+**Steps in IntelliJ IDEA:**
+
+1. Go to **File → New → Project...**
+2. Select **Spring Initializr**
+3. Enter project metadata (same as Spring Initializr)
+4. Add required dependencies:
+   - `Spring Web`
+   - `Spring AI Starter`
+   - `Lombok`
+5. Choose a location for the project
+6. Click **Create**
+
+The IDE generates the project structure and downloads dependencies.
+
+---
+
+## Adding Spring AI Dependencies Manually
+
+You can also add Spring AI dependencies manually via your build file.
+
+### Maven (`pom.xml`)
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.ai</groupId>
+        <artifactId>spring-ai-spring-boot-starter</artifactId>
+        <version>0.8.0</version> <!-- Use the latest version -->
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+
+Explanation:
+	•	spring-boot-starter-web — For web applications
+	•	spring-ai-spring-boot-starter — Core Spring AI dependency (latest version recommended)
+	•	lombok — Reduces boilerplate code
+	•	spring-boot-starter-test — Test dependencies
+
+⸻
+
+Gradle (build.gradle)
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.ai:spring-ai-spring-boot-starter:0.8.0' // Latest version
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+Explanation:
+	•	Adds Spring Web, Spring AI, Lombok, and testing dependencies
+
+⸻
+
+Configuring Your Application
+
+After setup, configure your app to interact with an LLM provider (e.g., OpenAI).
+
+Application Properties (application.yml)
+
+Steps:
+	1.	Create application.yml in src/main/resources
+	2.	Add configuration:
+
+spring:
+  ai:
+    openai:
+      api-key: YOUR_OPENAI_API_KEY
+
+Note: Replace YOUR_OPENAI_API_KEY with your actual key from OpenAI.
+
+Security Tip: Never commit API keys to version control. Use environment variables.
+
+⸻
+
+Using Environment Variables for Security
+
+Set Environment Variable:
+	•	On Linux/macOS:
+
+export OPENAI_API_KEY=YOUR_OPENAI_API_KEY
+
+	•	On Windows:
+
+setx OPENAI_API_KEY "YOUR_OPENAI_API_KEY"
+
+Reference in application.yml:
+
+spring:
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+
+
+
+⸻
+
+Configuring Other LLM Providers
+
+For example, with Azure OpenAI:
+
+spring:
+  ai:
+    azure-openai:
+      api-key: YOUR_AZURE_OPENAI_API_KEY
+      endpoint: YOUR_AZURE_OPENAI_ENDPOINT
+
+Explanation:
+	•	api-key — Your Azure OpenAI API key
+	•	endpoint — The deployment endpoint for Azure OpenAI
+
+We will cover other providers in detail in later lessons.
+
+⸻
+
+Verifying Your Setup
+
+Create a simple controller to test interaction with the LLM.
+
+Example: AIController.java
+
+package com.example.springai;
+
+import org.springframework.ai.client.AiClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class AIController {
+
+    @Autowired
+    private AiClient aiClient;
+
+    @GetMapping("/generate")
+    public String generate(@RequestParam("prompt") String prompt) {
+        return aiClient.generate(prompt);
+    }
+}
+
+Explanation:
+	•	@RestController — Marks class as a REST controller
+	•	@Autowired AiClient — Injects Spring AI client
+	•	/generate endpoint sends prompts to the LLM
+
+Test Your Setup:
+	•	Run your Spring Boot application
+	•	Visit:
+http://localhost:8080/generate?prompt=Tell me a joke
+
+If everything is configured correctly, the LLM will generate a joke in the response.
+
+⸻
+
+Practice Activities
+
+✅ Experiment with Different LLM Providers
+Try configuring Azure OpenAI or Hugging Face by adjusting dependencies and application.yml.
+
+✅ Secure Your API Keys
+Use environment variables or tools like HashiCorp Vault.
+
+✅ Explore Spring Initializr Options
+Experiment with different build tools, languages, and Spring Boot versions.
+
+✅ Implement Error Handling
+Enhance AIController to handle exceptions like AiClientException.
+
+⸻
+
+Summary
+
+In this lesson, you learned:
+	•	How to set up a Spring Boot project
+	•	Adding Spring AI dependencies
+	•	Configuring an LLM provider (e.g., OpenAI)
+	•	Verifying setup with a working API endpoint
+
+⸻
+
+Next Steps
+
+In the next lesson:
+	•	Explore Spring AI’s abstraction layer
+	•	Understand key interfaces and classes
+	•	Learn to connect with different LLM providers
+	•	Implement prompt engineering techniques to improve generated text
