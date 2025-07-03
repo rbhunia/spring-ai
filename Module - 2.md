@@ -1,3 +1,4 @@
+Understanding the `PromptTemplate` Abstraction
 
 Understanding the `PromptTemplate` Abstraction
 The PromptTemplate is a cornerstone abstraction in Spring AI, enabling developers to dynamically generate prompts for Large Language Models (LLMs). Instead of hardcoding prompts directly into your application, PromptTemplate allows you to define prompts with placeholders that can be populated with data at runtime. This approach promotes code reusability, flexibility, and maintainability, making it easier to experiment with different prompts and adapt to changing requirements. This lesson will delve into the intricacies of PromptTemplate, exploring its structure, usage, and benefits.
